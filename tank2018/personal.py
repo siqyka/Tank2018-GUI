@@ -35,10 +35,10 @@ class PersonalCenter(QWidget):
         self.increment = 0
 
     def serve_forever(self, account):
-        self.account = account
-        self.conn = socket.socket()
-        self.conn.connect(self.ADDR)
-        self.personal_query()
+        # self.account = account
+        # self.conn = socket.socket()
+        # self.conn.connect(self.ADDR)
+        # self.personal_query()
         self.personal_gui()
 
     def personal_query(self):
@@ -113,12 +113,12 @@ class PersonalCenter(QWidget):
         self.label13 = QLabel(self)
         self.label13.setGeometry(QRect(90, 180, 100, 20))
         self.label13.setObjectName('label')
-        self.label13.setText(self.nickname)
+        
 
         self.label14 = QLabel(self)
         self.label14.setGeometry(QRect(270, 180, 100, 20))
         self.label14.setObjectName('label')
-        self.label14.setText(self.uid)
+        
 
         self.label21 = QLabel('WIN:', self)
         self.label21.setGeometry(QRect(50, 230, 40, 20))
@@ -131,12 +131,21 @@ class PersonalCenter(QWidget):
         self.label21 = QLabel(self)
         self.label21.setGeometry(QRect(90, 230, 100, 20))
         self.label21.setObjectName('label')
-        self.label21.setText(self.win)
+        
 
         self.label22 = QLabel(self)
         self.label22.setGeometry(QRect(270, 230, 100, 20))
         self.label22.setObjectName('label')
-        self.label13.setText(self.lose)
+
+        # self.label13.setText(self.nickname)
+        # self.label14.setText(self.uid)
+        # self.label21.setText(self.win)
+        # self.label13.setText(self.lose)
+
+        self.label13.setText('nickname')
+        self.label14.setText('uid')
+        self.label21.setText('win')
+        self.label13.setText('lose')
 
         self.label3 = QLabel(self)
         self.label3.setGeometry(QRect(30, 300, 300, 20))

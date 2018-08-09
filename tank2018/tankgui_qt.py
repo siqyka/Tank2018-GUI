@@ -18,7 +18,7 @@ class Tank2018(QWidget):
         super().__init__()
         self.style = """ 
                 QPushButton{background-color:#00aeff;color:white;} 
-                #tank2018{ background:#2 02734; }
+                #tank2018{ background:#202734; }
                 #linet{background-color:#11151b;color:#474b53; border: 1px solid #00aeff;border-radius:3px}
                 #btn1{ background-color:#202734;color:#474b53; border:0px;font:900 25px "Microsoft YaHei";}
                 #btn2{ background-color:#202734;color:#474b53; border:0px;font:900 17px "Microsoft YaHei";}
@@ -35,8 +35,8 @@ class Tank2018(QWidget):
         self.ADDR = (hostaddr, 7777)
 
     def serve_forever(self):
-        self.conn = socket.socket()
-        self.conn.connect(self.ADDR)
+        # self.conn = socket.socket()
+        # self.conn.connect(self.ADDR)
         self.login_gui()
 
     # 主界面
@@ -97,7 +97,7 @@ class Tank2018(QWidget):
         # 登录按钮
         self.btn3 = QPushButton("登录", self)
         self.btn3.clicked.connect(self.login)  # 登录事件
-        self.btn3.clicked.connect(self.show)
+        # self.btn3.clicked.connect(self.show)
         self.btn3.setObjectName('btn3')
         self.btn3.setGeometry(QRect(30, 305, 300, 35))
         font = QtGui.QFont()
@@ -168,27 +168,36 @@ class Tank2018(QWidget):
         self.setCursor(QtGui.QCursor(Qt.ArrowCursor))
 
     def login(self):
-        self.account = self.linet1.text()
-        pwd = self.linet2.text()
-        # 连接数据库查询账号
-        msg = "LG#%s#%s" % (self.account, pwd)
-        self.conn.send(msg.encode())
-        data = self.conn.recv(2048).decode()
+        # self.account = self.linet1.text()
+        # pwd = self.linet2.text()
+        # # 连接数据库查询账号
+        # msg = "LG#%s#%s" % (self.account, pwd)
+        # self.conn.send(msg.encode())
+        # data = self.conn.recv(2048).decode()
 
-        if self.account == "":
-            flag = 'NoName'
-            self.erorr_gui(flag)
-        elif pwd == "":
-            flag = "NoPwd"
-            self.erorr_gui(flag)
-        elif data == "OK":
-            self.close()
-            pe = personal.PersonalCenter()
-            pe.serve_forever(self.account)
-            pe.show()
-        elif data == "UorPisError":
-            flag = data
-            self.erorr_gui(flag)
+        # if self.account == "":
+        #     flag = 'NoName'
+        #     self.erorr_gui(flag)
+        # elif pwd == "":
+        #     flag = "NoPwd"
+        #     self.erorr_gui(flag)
+        # elif data == "OK":
+        #     self.close()
+        #     pe = personal.PersonalCenter()
+        #     pe.serve_forever(self.account)
+        #     pe.show()
+        # elif data == "UorPisError":
+        #     flag = data
+        #     self.erorr_gui(flag)
+
+        #测试函数-错误提示
+        # self.erorr_gui('NoName')
+
+        #测试函数-跳转到个人中心（不链接数据库）
+        self.close()
+        self.pe = personal.PersonalCenter()
+        self.pe.serve_forever('hell')
+        self.pe.show()
 
     # 错误提示界面
     def erorr_gui(self, flag):
@@ -213,7 +222,7 @@ class Tank2018(QWidget):
                 #label1{color:#474b53;font:13px "Microsoft YaHei";}
                 #label4{background-color:#270a0c;color:red;font:15px  "Microsoft YaHei";padding-left:30px}
                '''
-
+        self.setStyleSheet(self.style)
         if flag == 'NoName':
             self.label4.setText('请输入用户名')
         elif flag == "NoPwd":
