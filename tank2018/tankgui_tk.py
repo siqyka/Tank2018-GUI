@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import socket
 import tkinter as tk
-import tank_start_client as tsc
+# import tank_start_client as tsc
 import os
 # import webbrowser
 
@@ -17,8 +17,8 @@ class TankGui(object):
 
         # 连接服务器
     def serve_forever(self):
-        self.conn = socket.socket()
-        self.conn.connect(self.ADDR)
+        # self.conn = socket.socket()
+        # self.conn.connect(self.ADDR)
         self.login_gui()
 
     def login_gui(self):
@@ -26,9 +26,9 @@ class TankGui(object):
         self.root.geometry("800x400")
         self.root.title("登录界面")
         # 背景图片
-        bgimage = tk.PhotoImage(file='TKimage/login_bg.png')
-        lab1 = tk.PhotoImage(file='TKimage/lab1.png')
-        lab2 = tk.PhotoImage(file='TKimage/lab2.png')
+        bgimage = tk.PhotoImage(file='tank2018/TKimage/login_bg.png')
+        lab1 = tk.PhotoImage(file='tank2018/TKimage/lab1.png')
+        lab2 = tk.PhotoImage(file='tank2018/TKimage/lab2.png')
         # label控件
         self.label = tk.Label(self.root, image=bgimage,
                               compound=tk.CENTER).pack()

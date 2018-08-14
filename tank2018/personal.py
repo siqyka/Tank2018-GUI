@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import socket
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLineEdit, QLabel)
@@ -11,11 +12,16 @@ from PyQt5 import QtGui
 import webbrowser
 import personal
 
+filepath=os.path.abspath(os.path.dirname(os.getcwd())+os.path.sep+"..")
+sys.path.append(filepath)   #tank_start_client模块所在文件夹路径
+import tank_start_client
+
 
 class PersonalCenter(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.path=os.getcwd()
         self.style = """ 
                 QPushButton{background-color:#00aeff;color:white;} 
                 #tank2018{ background:#202734; }
@@ -35,10 +41,10 @@ class PersonalCenter(QWidget):
         self.increment = 0
 
     def serve_forever(self, account):
-        # self.account = account
-        # self.conn = socket.socket()
-        # self.conn.connect(self.ADDR)
-        # self.personal_query()
+        self.account = account
+        self.conn = socket.socket()
+        self.conn.connect(self.ADDR)
+        self.personal_query()
         self.personal_gui()
 
     def personal_query(self):
@@ -52,7 +58,7 @@ class PersonalCenter(QWidget):
         self.lose = data[3]
 
         favicon = self.conn.recv(8192)
-        with open('QTimage/favicon.jpg', 'wb') as f:
+        with open(self.path+'/QTimage/favicon.jpg', 'wb') as f:
             f.write(favicon)
 
     def personal_gui(self):
@@ -70,7 +76,7 @@ class PersonalCenter(QWidget):
         palette1 = QtGui.QPalette()
         palette1.setBrush(self.backgroundRole(),
                           QtGui.QBrush(QtGui.QPixmap
-                                       ('QTimage/favicon.jpg')))
+                                       (self.path+'/QTimage/favicon.jpg')))
         self.label.setPalette(palette1)
 
         self.label2 = QLabel(self)
@@ -81,13 +87,9 @@ class PersonalCenter(QWidget):
         palette2 = QtGui.QPalette()
         palette2.setBrush(self.backgroundRole(),
                           QtGui.QBrush(QtGui.QPixmap
-                                       ('QTimage/PLOGO.png')))
+                                       (self.path+'/QTimage/PLOGO.png')))
         self.label2.setPalette(palette2)
 
-        # 错误提示区域
-        # self.label4 = QLabel(self)
-        # self.label4.setGeometry(QRect(0, 155, 360, 35))
-        # self.label4.setObjectName('label4')
 
         # 最小化按钮
         self.btn1 = QPushButton("-", self)
@@ -128,40 +130,43 @@ class PersonalCenter(QWidget):
         self.label22.setGeometry(QRect(230, 230, 40, 20))
         self.label22.setObjectName('label')
 
-        self.label21 = QLabel(self)
-        self.label21.setGeometry(QRect(90, 230, 100, 20))
-        self.label21.setObjectName('label')
+        self.label23 = QLabel(self)
+        self.label23.setGeometry(QRect(90, 230, 100, 20))
+        self.label23.setObjectName('label')
         
 
-        self.label22 = QLabel(self)
-        self.label22.setGeometry(QRect(270, 230, 100, 20))
-        self.label22.setObjectName('label')
+        self.label24 = QLabel(self)
+        self.label24.setGeometry(QRect(270, 230, 100, 20))
+        self.label24.setObjectName('label')
 
-        # self.label13.setText(self.nickname)
-        # self.label14.setText(self.uid)
-        # self.label21.setText(self.win)
-        # self.label13.setText(self.lose)
+        self.label13.setText(self.nickname)
+        self.label14.setText(self.uid)
+        self.label23.setText(self.win)
+        self.label24.setText(self.lose)
 
-        self.label13.setText('nickname')
-        self.label14.setText('uid')
-        self.label21.setText('win')
-        self.label13.setText('lose')
+        # self.label13.setText('nickname')
+        # self.label14.setText('uid')
+        # self.label21.setText('win')
+        # self.label13.setText('lose')
 
         self.label3 = QLabel(self)
         self.label3.setGeometry(QRect(30, 300, 300, 20))
         self.label3.setText(_translate("self", "<html><head/><body>\
-            <p align=\"center\"><span style=\" font-size:15px; \
+            <p align=\"center\"><span style=\" font:15px  Microsoft YaHei; \
             color:#00aeff;\"> pirate ship  </span>\
         </p></body></html>"))
 
+
         self.btn3 = QPushButton(self)
-        # self.btn3.clicked.connect(self.login)   #登录事件
+        self.btn3.clicked.connect(self.startgame)   #启动事件
         self.btn3.setObjectName('btn3')
         self.btn3.setGeometry(QRect(55, 380, 250, 50))
         self.btn3.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
-        self.btn3.setStyleSheet(
-            '#btn3{background-image:url(QTimage/tankbtn.png);}')
+        self.btn3.setStyleSheet('#btn3{background-image:url(QTimage/tankbtn.png);bord}')
         # self.btn3.setStyleSheet('#btn3{border-image:url(timg.jpg);bord}')
+
+    def startgame(self):
+        tank_start_client.main()
 
     # 几条画线的函数
     def paintEvent(self, e):
@@ -198,3 +203,11 @@ class PersonalCenter(QWidget):
     def mouseReleaseEvent(self, QMouseEvent):
         self.m_drag = False
         self.setCursor(QtGui.QCursor(Qt.ArrowCursor))
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = PersonalCenter()
+    ex.serve_forever('ethan.71@163.com')
+    ex.show()
+    sys.exit(app.exec_())
