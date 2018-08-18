@@ -13,7 +13,7 @@ class LoginSwrver(object):
         self.name = ""
         self.pwd = ""
         # 服务器头像存储文件夹路径
-        self.path = '/home/tarena/python/Django/Tank2018/index/favicon/'
+        self.path = r'C:\Users\Administrator\Desktop\2018tank-0723\Tank2018-GUI\tank2018'
 
     # 连接套接字
     def client_socket(self):
@@ -24,8 +24,9 @@ class LoginSwrver(object):
 
     # 连接数据库
     def conn_sql(self):
+        print('conn_sql')
         self.db = pymysql.connect(
-            "localhost", "root", "123456", charset="utf8")
+            "localhost", "root", "tarena", charset="utf8")
         self.cur = self.db.cursor()
         self.cur.execute("use Tank;")
 
@@ -36,6 +37,7 @@ class LoginSwrver(object):
         print("Listen...")
         while True:
             conn, addr = self.sock.accept()
+            print(addr)
             self.clientThread = threading.Thread(
                 target=self.handle_thing, args=(conn,))
             self.clientThread.setDaemon(True)
@@ -62,7 +64,7 @@ class LoginSwrver(object):
         self.account = data[1]
         self.pwd = data[2]
         self.cur.execute(
-            "select name,pwd from index_user \
+            "select email,pwd from user \
             where email ='%s';" % self.account)
         count = self.cur.fetchall()
         try:
@@ -77,7 +79,7 @@ class LoginSwrver(object):
     def query(self, data):
         self.account = data[1]
         self.cur.execute(
-            "select nickname,uid,win,lose,favicon from index_user \
+            "select nickname,uid,win,lose,favicon from user \
             where email ='%s';" % self.account)
         self.count = self.cur.fetchall()
         print(self.count)
@@ -88,10 +90,11 @@ class LoginSwrver(object):
 
     #发送头像图片给客户端
     def favicon(self):
-        iconpath = self.path + self.count[0][4]
+        iconpath = self.path + '\\'+self.count[0][4]
         with open(iconpath, "rb") as f:
             data = f.read()
         self.conn.send(data)
+        print(iconpath)
 
 
 def main():

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import socket
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLineEdit, QLabel)
@@ -16,10 +17,11 @@ class Tank2018(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.path=os.getcwd()
         self.style = """ 
                 QPushButton{background-color:#00aeff;color:white;} 
                 #tank2018{ background:#202734; }
-                #linet{background-color:#11151b;color:#474b53; border: 1px solid #00aeff;border-radius:3px}
+                #linet{background-color:#11151b;color:#00aeff; border: 1px solid #00aeff;border-radius:3px;font:15px "Microsoft YaHei";}
                 #btn1{ background-color:#202734;color:#474b53; border:0px;font:900 25px "Microsoft YaHei";}
                 #btn2{ background-color:#202734;color:#474b53; border:0px;font:900 17px "Microsoft YaHei";}
                 #btn4{background-color:#202734;color:#00aeff; border:0px;font:15px "Microsoft YaHei";}
@@ -35,8 +37,8 @@ class Tank2018(QWidget):
         self.ADDR = (hostaddr, 7777)
 
     def serve_forever(self):
-        # self.conn = socket.socket()
-        # self.conn.connect(self.ADDR)
+        self.conn = socket.socket()
+        self.conn.connect(self.ADDR)
         self.login_gui()
 
     # 主界面
@@ -55,7 +57,7 @@ class Tank2018(QWidget):
         palette1 = QtGui.QPalette()
         palette1.setBrush(self.backgroundRole(),
                           QtGui.QBrush(QtGui.QPixmap
-                                       ('QTimage/LOGO.png')))
+                                       (self.path+'/QTimage/LOGO.png')))
         self.label.setPalette(palette1)
 
         # 错误提示区域
@@ -168,36 +170,36 @@ class Tank2018(QWidget):
         self.setCursor(QtGui.QCursor(Qt.ArrowCursor))
 
     def login(self):
-        # self.account = self.linet1.text()
-        # pwd = self.linet2.text()
-        # # 连接数据库查询账号
-        # msg = "LG#%s#%s" % (self.account, pwd)
-        # self.conn.send(msg.encode())
-        # data = self.conn.recv(2048).decode()
+        self.account = self.linet1.text()
+        pwd = self.linet2.text()
+        # 连接数据库查询账号
+        msg = "LG#%s#%s" % (self.account, pwd)
+        self.conn.send(msg.encode())
+        data = self.conn.recv(2048).decode()
 
-        # if self.account == "":
-        #     flag = 'NoName'
-        #     self.erorr_gui(flag)
-        # elif pwd == "":
-        #     flag = "NoPwd"
-        #     self.erorr_gui(flag)
-        # elif data == "OK":
-        #     self.close()
-        #     pe = personal.PersonalCenter()
-        #     pe.serve_forever(self.account)
-        #     pe.show()
-        # elif data == "UorPisError":
-        #     flag = data
-        #     self.erorr_gui(flag)
+        if self.account == "":
+            flag = 'NoName'
+            self.erorr_gui(flag)
+        elif pwd == "":
+            flag = "NoPwd"
+            self.erorr_gui(flag)
+        elif data == "OK":
+            self.close()
+            self.pe = personal.PersonalCenter()
+            self.pe.serve_forever(self.account)
+            self.pe.show()
+        elif data == "UorPisError":
+            flag = data
+            self.erorr_gui(flag)
 
         #测试函数-错误提示
         # self.erorr_gui('NoName')
 
         #测试函数-跳转到个人中心（不链接数据库）
-        self.close()
-        self.pe = personal.PersonalCenter()
-        self.pe.serve_forever('hell')
-        self.pe.show()
+        # self.close()
+        # self.pe = personal.PersonalCenter()
+        # self.pe.serve_forever('hell')
+        # self.pe.show()
 
     # 错误提示界面
     def erorr_gui(self, flag):
